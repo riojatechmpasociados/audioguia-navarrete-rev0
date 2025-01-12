@@ -6,18 +6,37 @@
     <title>Audioguía del Museo</title>
     <!-- Vinculando Bootstrap desde un CDN -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos para el indicador de carga */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            z-index: 9999;
+        }
+    </style>
 </head>
 <body>
 
+    <!-- Indicador de carga -->
+    <div id="loading">
+        <div>Cargando...</div>
+    </div>
+
     <!-- Contenedor principal -->
-    <div class="container mt-5">
-        <!-- Título -->
+    <div class="container mt-5" style="display: none;" id="content">
         <div class="text-center">
             <h1 class="display-4">Bienvenidos a la Audioguía del Museo</h1>
             <p class="lead">Accede a los módulos de audio para explorar las exposiciones del museo.</p>
         </div>
 
-        <!-- Lista de módulos de audio -->
         <div class="list-group">
             <!-- Repite este bloque para cada módulo -->
             <a href="#modulo1" class="list-group-item list-group-item-action">
@@ -48,5 +67,25 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Service Worker y Cache -->
+    <script>
+        // Verificar si el navegador soporta Service Workers
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').then(registration => {
+                    console.log('Service Worker registrado con éxito: ', registration);
+                }).catch(error => {
+                    console.log('Error al registrar el Service Worker: ', error);
+                });
+            });
+        }
+
+        // Cuando la página haya cargado completamente, ocultamos el loading y mostramos el contenido
+        window.addEventListener('load', () => {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        });
+    </script>
 </body>
 </html>
