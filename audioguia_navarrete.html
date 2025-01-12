@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audioguía del Museo</title>
+    <!-- Vinculando Bootstrap desde un CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Contenedor principal -->
+    <div class="container mt-5">
+        <!-- Título -->
+        <div class="text-center">
+            <h1 class="display-4">Bienvenidos a la Audioguía del Museo</h1>
+            <p class="lead">Accede a los módulos de audio para explorar las exposiciones del museo.</p>
+        </div>
+
+        <!-- Lista de módulos de audio -->
+        <div class="list-group">
+            <!-- Repite este bloque para cada módulo -->
+            <a href="#modulo1" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">Módulo 1: Introducción al Museo</h5>
+                <p class="mb-1">Una breve historia del museo y su origen.</p>
+                <small>Duración: 5 minutos</small>
+            </a>
+            <a href="#modulo2" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">Módulo 2: Arte Prehistórico</h5>
+                <p class="mb-1">Explora las primeras obras de arte humano.</p>
+                <small>Duración: 7 minutos</small>
+            </a>
+            <!-- Repite este bloque para cada módulo hasta el módulo 20 -->
+            <a href="#modulo20" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">Módulo 20: Arte Contemporáneo</h5>
+                <p class="mb-1">Un recorrido por el arte moderno y contemporáneo.</p>
+                <small>Duración: 10 minutos</small>
+            </a>
+        </div>
+
+        <!-- Enlace a la audioguía completa -->
+        <div class="text-center mt-4">
+            <a href="https://link-a-tu-audioguia.com" class="btn btn-primary btn-lg">Acceder a la Audioguía Completa</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS y dependencias (jQuery y Popper.js) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
