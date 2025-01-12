@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Completo - Audioguía</title>
+</head>
+<body>
+    <h1>¡Gracias por tu compra!</h1>
+    <p>Tu pago ha sido exitoso. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 3 horas, pero solo se podrá usar en este dispositivo:</p>
+    <a href="https://tusitio.com/audioguia?access_token=UNICO_CODIGO" id="access-link">Acceder a la Audioguía</a>
+
+    <script>
+        // Comprobar si el dispositivo ya ha realizado el pago
+        const paymentDone = localStorage.getItem('payment_done');
+        const paymentTime = localStorage.getItem('payment_time');
+
+        const expiryTime = 3 * 60 * 60 * 1000;  // 3 horas en milisegundos
+        const currentTime = new Date().getTime();
+
+        const accessLink = document.getElementById("access-link");
+
+        if (!paymentDone || !paymentTime) {
+            // Si no hay registro de pago en este dispositivo, desactivar el enlace
+            accessLink.href = "#";
+            accessLink.innerText = "El enlace no está disponible.";
+        } else {
+            // Comprobar si el tiempo de acceso ha expirado
+            const timeLeft = currentTime - paymentTime;
+            if (timeLeft > expiryTime) {
+                // Si el tiempo ha expirado, desactivar el enlace
+                accessLink.href = "#";
+                accessLink.innerText = "El enlace ha expirado.";
+            }
+        }
+
+        // Si el pago acaba de realizarse, guardar los datos en localStorage
+        if (!paymentDone && !paymentTime) {
+            // Guardar el estado de pago y la hora del pago en localStorage
+            localStorage.setItem('payment_done', 'true');
+            localStorage.setItem('payment_time', currentTime);
+        }
+    </script>
+</body>
+</html>
