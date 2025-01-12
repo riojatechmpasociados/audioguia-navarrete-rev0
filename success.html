@@ -31,13 +31,12 @@
             return null;
         }
 
-        // Retrasar la verificación de las cookies (2 segundos)
-        setTimeout(function() {
-            // Comprobar si el pago ya ha sido realizado
+        // Función para verificar las cookies y permitir el acceso
+        function checkAccess() {
             const paymentDone = getCookie('payment_done');
             const paymentTime = getCookie('payment_time');
 
-            const expiryTime = 2 * 60 * 1000;  // 2 minutos en milisegundos (120,000 ms)
+            const expiryTime = 1 * 60 * 1000;  // 2 minutos en milisegundos (120,000 ms)
             const currentTime = new Date().getTime();
 
             const accessLink = document.getElementById("access-link");
@@ -58,15 +57,28 @@
                     console.log('Acceso permitido');
                 }
             }
+        }
 
+        // Retrasar la verificación de las cookies (2 segundos)
+        setTimeout(function() {
             // Si el pago acaba de realizarse, guardar los datos en la cookie
+            const paymentDone = getCookie('payment_done');
+            const paymentTime = getCookie('payment_time');
+
             if (!paymentDone && !paymentTime) {
-                // Guardar el estado de pago y la hora del pago en cookies
+                const currentTime = new Date().getTime();
                 setCookie('payment_done', 'true', 3);  // La cookie durará 3 horas
                 setCookie('payment_time', currentTime, 3);  // Guardar el momento del pago
             }
-        }, 2000);  // 2 segundos de retraso para dar tiempo a que las cookies se configuren
 
+            // Verificar el estado de las cookies después del retraso
+            checkAccess();
+
+            // Ocultar el loading y mostrar el contenido
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }, 2000);  // 2 segundos de retraso para dar tiempo a que las cookies se configuren
     </script>
+
 </body>
 </html>
