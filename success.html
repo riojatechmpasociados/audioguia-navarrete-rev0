@@ -32,27 +32,36 @@
         }
 
         // Comprobar si el pago ya ha sido realizado
-        const paymentDone = getCookie('payment_done');
-        const paymentTime = getCookie('payment_time');
+const paymentDone = getCookie('payment_done');
+const paymentTime = getCookie('payment_time');
 
-        const expiryTime = 3 * 60 * 60 * 1000;  // 3 horas en milisegundos
-        const currentTime = new Date().getTime();
+const expiryTime = 3 * 60 * 60 * 1000;  // 3 horas en milisegundos
+const currentTime = new Date().getTime();
 
-        const accessLink = document.getElementById("access-link");
+// Depuración: Verificar valores de tiempo
+console.log('currentTime:', currentTime);
+console.log('paymentTime:', paymentTime);
 
-        if (!paymentDone || !paymentTime) {
-            // Si no hay registro de pago en este dispositivo, desactivar el enlace
-            accessLink.href = "#";
-            accessLink.innerText = "El enlace no está disponible.";
-        } else {
-            // Comprobar si el tiempo de acceso ha expirado
-            const timeLeft = currentTime - paymentTime;
-            if (timeLeft > expiryTime) {
-                // Si el tiempo ha expirado, desactivar el enlace
-                accessLink.href = "#";
-                accessLink.innerText = "El enlace ha expirado.";
-            }
-        }
+const accessLink = document.getElementById("access-link");
+
+if (!paymentDone || !paymentTime) {
+    // Si no hay registro de pago en este dispositivo, desactivar el enlace
+    accessLink.href = "#";
+    accessLink.innerText = "El enlace no está disponible.";
+} else {
+    // Comprobar si el tiempo de acceso ha expirado
+    const timeLeft = currentTime - paymentTime;
+    console.log('timeLeft:', timeLeft);
+    
+    if (timeLeft > expiryTime) {
+        // Si el tiempo ha expirado, desactivar el enlace
+        accessLink.href = "#";
+        accessLink.innerText = "El enlace ha expirado.";
+    } else {
+        // Si el tiempo no ha expirado, mantener el enlace activo
+        console.log('Acceso permitido');
+    }
+}
 
         // Si el pago acaba de realizarse, guardar los datos en la cookie
         if (!paymentDone && !paymentTime) {
