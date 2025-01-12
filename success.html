@@ -4,21 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Completo - Audioguía</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos para el indicador de carga */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            z-index: 9999;
+        }
+    </style>
 </head>
 <body>
-    <h1>¡Gracias por tu compra!</h1>
-    <p>Tu pago ha sido exitoso. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 3 horas, pero solo se podrá usar en este dispositivo:</p>
-    <a href="https://riojatechmpasociados.github.io/visita-navarrete/audioguia_navarrete.html?access_token=UNICO_CODIGO" id="access-link">Acceder a la Audioguía</a>
+
+    <!-- Indicador de carga -->
+    <div id="loading">
+        <div>Cargando...</div>
+    </div>
+
+    <!-- Contenido de la página (inicialmente oculto) -->
+    <div class="container mt-5" id="content" style="display: none;">
+        <div class="text-center">
+            <h1 class="display-4">¡Gracias por tu compra!</h1>
+            <p class="lead">Tu pago ha sido exitoso. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 2 minutos, pero solo se podrá usar en este dispositivo:</p>
+            <a href="https://tusitio.com/audioguia" id="access-link" class="btn btn-primary btn-lg">Acceder a la Audioguía</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS y dependencias (jQuery y Popper.js) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        // Función para establecer una cookie
-        function setCookie(name, value, hours) {
-            const date = new Date();
-            date.setTime(date.getTime() + (hours * 60 * 60 * 1000));  // Establecer la expiración en horas
-            const expires = "expires=" + date.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/";
-        }
-
         // Función para obtener una cookie
         function getCookie(name) {
             const nameEQ = name + "=";
@@ -31,44 +56,42 @@
             return null;
         }
 
-        // Comprobar si el pago ya ha sido realizado
-const paymentDone = getCookie('payment_done');
-const paymentTime = getCookie('payment_time');
+        // Función para verificar las cookies y permitir el acceso
+        function checkAccess() {
+            const paymentDone = getCookie('payment_done');
+            const paymentTime = getCookie('payment_time');
 
-const expiryTime = 1 * 60 * 1000;  // 1 minuto en milisegundos (solo para pruebas)
-const currentTime = new Date().getTime();
+            const expiryTime = 2 * 60 * 1000;  // 2 minutos en milisegundos (120,000 ms)
+            const currentTime = new Date().getTime();
 
-// Depuración: Verificar valores de tiempo
-console.log('currentTime:', currentTime);
-console.log('paymentTime:', paymentTime);
+            const accessLink = document.getElementById("access-link");
 
-const accessLink = document.getElementById("access-link");
-
-if (!paymentDone || !paymentTime) {
-    // Si no hay registro de pago en este dispositivo, desactivar el enlace
-    accessLink.href = "#";
-    accessLink.innerText = "El enlace no está disponible.";
-} else {
-    // Comprobar si el tiempo de acceso ha expirado
-    const timeLeft = currentTime - paymentTime;
-    console.log('timeLeft:', timeLeft);
-    
-    if (timeLeft > expiryTime) {
-        // Si el tiempo ha expirado, desactivar el enlace
-        accessLink.href = "#";
-        accessLink.innerText = "El enlace ha expirado.";
-    } else {
-        // Si el tiempo no ha expirado, mantener el enlace activo
-        console.log('Acceso permitido');
-    }
-}
-
-        // Si el pago acaba de realizarse, guardar los datos en la cookie
-        if (!paymentDone && !paymentTime) {
-            // Guardar el estado de pago y la hora del pago en cookies
-            setCookie('payment_done', 'true', 3);  // La cookie durará 3 horas
-            setCookie('payment_time', currentTime, 3);  // Guardar el momento del pago
+            if (!paymentDone || !paymentTime) {
+                // Si no hay registro de pago en este dispositivo, desactivar el enlace
+                accessLink.href = "#";
+                accessLink.innerText = "El enlace no está disponible.";
+            } else {
+                // Comprobar si el tiempo de acceso ha expirado
+                const timeLeft = currentTime - paymentTime;
+                if (timeLeft > expiryTime) {
+                    // Si el tiempo ha expirado, desactivar el enlace
+                    accessLink.href = "#";
+                    accessLink.innerText = "El enlace ha expirado.";
+                } else {
+                    // Si el tiempo no ha expirado, mantener el enlace activo
+                    console.log('Acceso permitido');
+                }
+            }
         }
+
+        // Retrasar la verificación de las cookies (500ms)
+        setTimeout(function() {
+            checkAccess();
+            // Ocultar el loading y mostrar el contenido
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }, 500);  // 500ms de retraso
     </script>
+
 </body>
 </html>
