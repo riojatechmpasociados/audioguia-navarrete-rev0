@@ -7,10 +7,15 @@
 </head>
 <body>
     <h1>¡Gracias por tu compra!</h1>
-    <p>Tu pago ha sido exitoso ACTUALIZADO 3EFRAIM. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 2 minutos, pero solo se podrá usar en este dispositivo:</p>
+    <p>Tu pago ha sido exitoso. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 2 minutos, pero solo se podrá usar en este dispositivo:</p>
     <a href="https://riojatechmpasociados.github.io/visita-navarrete/audioguia_navarrete.html?access_token=UNICO_CODIGO" id="access-link">Acceder a la Audioguía</a>
 
     <script>
+        // Función para generar un token único
+        function generateUniqueToken() {
+            return 'TOKEN_' + Math.random().toString(36).substr(2, 9);  // Genera un token único basado en un número aleatorio
+        }
+
         // Función para establecer una cookie
         function setCookie(name, value, hours) {
             const date = new Date();
@@ -31,30 +36,35 @@
             return null;
         }
 
-        // Función para verificar las cookies y permitir el acceso
+        // Comprobar si el pago ya ha sido realizado y el token es válido
         function checkAccess() {
             const paymentDone = getCookie('payment_done');
             const paymentTime = getCookie('payment_time');
+            const deviceToken = getCookie('device_token');  // Token único asociado al dispositivo
 
             const expiryTime = 2 * 60 * 1000;  // 2 minutos en milisegundos (120,000 ms)
             const currentTime = new Date().getTime();
 
             const accessLink = document.getElementById("access-link");
 
-            if (!paymentDone || !paymentTime) {
-                // Si no hay registro de pago en este dispositivo, desactivar el enlace
+            // Verificar si las cookies están presentes y válidas
+            if (!paymentDone || !paymentTime || !deviceToken) {
                 accessLink.href = "#";
                 accessLink.innerText = "El enlace no está disponible.";
             } else {
-                // Comprobar si el tiempo de acceso ha expirado
                 const timeLeft = currentTime - paymentTime;
                 if (timeLeft > expiryTime) {
-                    // Si el tiempo ha expirado, desactivar el enlace
                     accessLink.href = "#";
                     accessLink.innerText = "El enlace ha expirado.";
                 } else {
-                    // Si el tiempo no ha expirado, mantener el enlace activo
-                    console.log('Acceso permitido');
+                    // Si el token no coincide con el token guardado, desactivar el enlace
+                    const storedToken = getCookie('device_token');
+                    if (storedToken !== deviceToken) {
+                        accessLink.href = "#";
+                        accessLink.innerText = "El enlace no está disponible.";
+                    } else {
+                        console.log('Acceso permitido');
+                    }
                 }
             }
         }
@@ -67,8 +77,11 @@
 
             if (!paymentDone && !paymentTime) {
                 const currentTime = new Date().getTime();
+                const deviceToken = generateUniqueToken();  // Generar un token único para el dispositivo
+
                 setCookie('payment_done', 'true', 3);  // La cookie durará 3 horas
                 setCookie('payment_time', currentTime, 3);  // Guardar el momento del pago
+                setCookie('device_token', deviceToken, 3);  // Guardar el token único para el dispositivo
             }
 
             // Verificar el estado de las cookies después del retraso
@@ -79,6 +92,5 @@
             document.getElementById('content').style.display = 'block';
         }, 2000);  // 2 segundos de retraso para dar tiempo a que las cookies se configuren
     </script>
-
 </body>
 </html>
