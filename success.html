@@ -56,6 +56,14 @@
             return null;
         }
 
+        // Función para establecer una cookie
+        function setCookie(name, value, hours) {
+            const date = new Date();
+            date.setTime(date.getTime() + (hours * 60 * 60 * 1000));  // Establecer la expiración en horas
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
         // Función para verificar las cookies y permitir el acceso
         function checkAccess() {
             const paymentDone = getCookie('payment_done');
@@ -90,7 +98,7 @@
             // Ocultar el loading y mostrar el contenido
             document.getElementById('loading').style.display = 'none';
             document.getElementById('content').style.display = 'block';
-        }, 500);  // 500ms de retraso
+        }, 500);  // 500ms de retraso para dar tiempo a que las cookies se configuren
     </script>
 
 </body>
