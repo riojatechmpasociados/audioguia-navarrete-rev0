@@ -4,46 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Completo - Audioguía</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Estilos para el indicador de carga */
-        #loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            z-index: 9999;
-        }
-    </style>
 </head>
 <body>
-
-    <!-- Indicador de carga -->
-    <div id="loading">
-        <div>Cargando...</div>
-    </div>
-
-    <!-- Contenido de la página (inicialmente oculto) -->
-    <div class="container mt-5" id="content" style="display: none;">
-        <div class="text-center">
-            <h1 class="display-4">¡Gracias por tu compra!</h1>
-            <p class="lead">Tu pago ha sido exitoso. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 2 minutos, pero solo se podrá usar en este dispositivo:</p>
-            <a href="https://riojatechmpasociados.github.io/visita-navarrete/audioguia_navarrete.html" id="access-link" class="btn btn-primary btn-lg">Acceder a la Audioguía</a>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS y dependencias (jQuery y Popper.js) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <h1>¡Gracias por tu compra!</h1>
+    <p>Tu pago ha sido exitoso. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 2 minutos, pero solo se podrá usar en este dispositivo:</p>
+    <a href="https://riojatechmpasociados.github.io/visita-navarrete/audioguia_navarrete.html?access_token=UNICO_CODIGO" id="access-link">Acceder a la Audioguía</a>
 
     <script>
+        // Función para establecer una cookie
+        function setCookie(name, value, hours) {
+            const date = new Date();
+            date.setTime(date.getTime() + (hours * 60 * 60 * 1000));  // Establecer la expiración en horas
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
         // Función para obtener una cookie
         function getCookie(name) {
             const nameEQ = name + "=";
@@ -56,22 +31,11 @@
             return null;
         }
 
-        // Función para establecer una cookie
-        function setCookie(name, value, hours) {
-            const date = new Date();
-            date.setTime(date.getTime() + (hours * 60 * 60 * 1000));  // Establecer la expiración en horas
-            const expires = "expires=" + date.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/";
-        }
-
-        // Función para verificar las cookies y permitir el acceso
-        function checkAccess() {
+        // Retrasar la verificación de las cookies (2 segundos)
+        setTimeout(function() {
+            // Comprobar si el pago ya ha sido realizado
             const paymentDone = getCookie('payment_done');
             const paymentTime = getCookie('payment_time');
-
-            // Depuración: Verificar las cookies
-            console.log('payment_done:', paymentDone);
-            console.log('payment_time:', paymentTime);
 
             const expiryTime = 2 * 60 * 1000;  // 2 minutos en milisegundos (120,000 ms)
             const currentTime = new Date().getTime();
@@ -94,16 +58,15 @@
                     console.log('Acceso permitido');
                 }
             }
-        }
 
-        // Retrasar la verificación de las cookies (2 segundos)
-        setTimeout(function() {
-            checkAccess();
-            // Ocultar el loading y mostrar el contenido
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
+            // Si el pago acaba de realizarse, guardar los datos en la cookie
+            if (!paymentDone && !paymentTime) {
+                // Guardar el estado de pago y la hora del pago en cookies
+                setCookie('payment_done', 'true', 3);  // La cookie durará 3 horas
+                setCookie('payment_time', currentTime, 3);  // Guardar el momento del pago
+            }
         }, 2000);  // 2 segundos de retraso para dar tiempo a que las cookies se configuren
-    </script>
 
+    </script>
 </body>
 </html>
