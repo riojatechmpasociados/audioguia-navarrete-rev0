@@ -11,9 +11,29 @@
     <a href="https://tusitio.com/audioguia?access_token=UNICO_CODIGO" id="access-link">Acceder a la Audioguía</a>
 
     <script>
-        // Comprobar si el dispositivo ya ha realizado el pago
-        const paymentDone = localStorage.getItem('payment_done');
-        const paymentTime = localStorage.getItem('payment_time');
+        // Función para establecer una cookie
+        function setCookie(name, value, hours) {
+            const date = new Date();
+            date.setTime(date.getTime() + (hours * 60 * 60 * 1000));  // Establecer la expiración en horas
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        // Función para obtener una cookie
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Comprobar si el pago ya ha sido realizado
+        const paymentDone = getCookie('payment_done');
+        const paymentTime = getCookie('payment_time');
 
         const expiryTime = 3 * 60 * 60 * 1000;  // 3 horas en milisegundos
         const currentTime = new Date().getTime();
@@ -34,11 +54,11 @@
             }
         }
 
-        // Si el pago acaba de realizarse, guardar los datos en localStorage
+        // Si el pago acaba de realizarse, guardar los datos en la cookie
         if (!paymentDone && !paymentTime) {
-            // Guardar el estado de pago y la hora del pago en localStorage
-            localStorage.setItem('payment_done', 'true');
-            localStorage.setItem('payment_time', currentTime);
+            // Guardar el estado de pago y la hora del pago en cookies
+            setCookie('payment_done', 'true', 3);  // La cookie durará 3 horas
+            setCookie('payment_time', currentTime, 3);  // Guardar el momento del pago
         }
     </script>
 </body>
