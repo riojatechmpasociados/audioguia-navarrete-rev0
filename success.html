@@ -3,94 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pago Completo - Audioguía</title>
+    <title>Pago Completo - Audioguía efraim-1</title>
 </head>
 <body>
     <h1>¡Gracias por tu compra!</h1>
-    <p>Tu pago ha sido exitoso EFRAIM3. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 2 minutos, pero solo se podrá usar en este dispositivo:</p>
-    <a href="https://riojatechmpasociados.github.io/visita-navarrete/audioguia_navarrete.html?access_token=UNICO_CODIGO" id="access-link">Acceder a la Audioguía</a>
+    <p>Tu pago ha sido exitoso. Haz clic en el siguiente enlace para acceder a la audioguía. Este enlace estará disponible por 2 minutos, pero solo se podrá usar en este dispositivo:</p>
+    <a href="#" id="access-link">Acceder a la Audioguía</a>
 
     <script>
-        // Función para generar un token único
-        function generateUniqueToken() {
-            return 'TOKEN_' + Math.random().toString(36).substr(2, 9);  // Genera un token único basado en un número aleatorio
+        // URL de la API en AWS
+        const apiUrl = 'https://eays3e88k9.execute-api.eu-south-2.amazonaws.com/prod/verifytoken_navarrete';  // Reemplaza con tu URL de API Gateway
+
+        // Obtener el token desde localStorage o cookies
+        const token = localStorage.getItem('payment_token');  // O obtener de las cookies si se guardó allí
+
+        const accessLink = document.getElementById("access-link");
+
+        if (token) {
+            // Hacer una solicitud al backend (AWS Lambda) para validar el token
+            fetch(`${apiUrl}?token=${token}`)
+                .then(response => response.json())
+                .then(data => {
+                    accessLink.innerText = data.message === 'Acceso permitido a la audioguía' ? 'Acceder a la Audioguía' : 'El enlace no está disponible.';
+                    accessLink.href = data.message === 'Acceso permitido a la audioguía' ? 'https://riojatechmpasociados.github.io/visita-navarrete/audioguia_navarrete.html' : '#';
+                })
+                .catch(err => {
+                    console.error('Error al verificar el token:', err);
+                    accessLink.innerText = 'Error al verificar el acceso.';
+                    accessLink.href = '#';
+                });
+        } else {
+            accessLink.innerText = 'El enlace no está disponible.';
+            accessLink.href = '#';
         }
-
-        // Función para establecer una cookie
-        function setCookie(name, value, hours) {
-            const date = new Date();
-            date.setTime(date.getTime() + (hours * 60 * 60 * 1000));  // Establecer la expiración en horas
-            const expires = "expires=" + date.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/";
-        }
-
-        // Función para obtener una cookie
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        // Comprobar si el pago ya ha sido realizado y el token es válido
-        function checkAccess() {
-            const paymentDone = getCookie('payment_done');
-            const paymentTime = getCookie('payment_time');
-            const deviceToken = getCookie('device_token');  // Token único asociado al dispositivo
-
-            const expiryTime = 2 * 60 * 1000;  // 2 minutos en milisegundos (120,000 ms)
-            const currentTime = new Date().getTime();
-
-            const accessLink = document.getElementById("access-link");
-
-            // Verificar si las cookies están presentes y válidas
-            if (!paymentDone || !paymentTime || !deviceToken) {
-                accessLink.href = "#";
-                accessLink.innerText = "El enlace no está disponible.";
-            } else {
-                const timeLeft = currentTime - paymentTime;
-                if (timeLeft > expiryTime) {
-                    accessLink.href = "#";
-                    accessLink.innerText = "El enlace ha expirado.";
-                } else {
-                    // Si el token no coincide con el token guardado, desactivar el enlace
-                    const storedToken = getCookie('device_token');
-                    if (storedToken !== deviceToken) {
-                        accessLink.href = "#";
-                        accessLink.innerText = "El enlace no está disponible.";
-                    } else {
-                        console.log('Acceso permitido');
-                    }
-                }
-            }
-        }
-
-        // Retrasar la verificación de las cookies (2 segundos)
-        setTimeout(function() {
-            // Si el pago acaba de realizarse, guardar los datos en la cookie
-            const paymentDone = getCookie('payment_done');
-            const paymentTime = getCookie('payment_time');
-
-            if (!paymentDone && !paymentTime) {
-                const currentTime = new Date().getTime();
-                const deviceToken = generateUniqueToken();  // Generar un token único para el dispositivo
-
-                setCookie('payment_done', 'true', 3);  // La cookie durará 3 horas
-                setCookie('payment_time', currentTime, 3);  // Guardar el momento del pago
-                setCookie('device_token', deviceToken, 3);  // Guardar el token único para el dispositivo
-            }
-
-            // Verificar el estado de las cookies después del retraso
-            checkAccess();
-
-            // Ocultar el loading y mostrar el contenido
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
-        }, 2000);  // 2 segundos de retraso para dar tiempo a que las cookies se configuren
     </script>
 </body>
 </html>
