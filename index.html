@@ -35,13 +35,13 @@
     function checkReferer() {
       var referer = document.referrer;
 
-      // Verificar si el referer comienza con https://www.riojatech.com
-      if (referer && referer.startsWith('https://www.riojatech.com')) {
-        // Si el referer es válido, permitir que se cargue la página
+      console.log('Referer:', referer);  // Esto ayudará a ver el valor real del referer en la consola
+
+      // Verificar si el referer contiene "riojatech.com" (sin importar el protocolo o el resto de la URL)
+      if (referer && referer.indexOf('riojatech.com') !== -1) {
         console.log('Acceso permitido desde www.riojatech.com');
       } else {
-        // Si no proviene de www.riojatech.com, redirigir a la página de error o a otra URL
-        alert('Acceso no autorizado. Debes llegar a esta página desde www.riojatech.com.');
+        alert('Acceso no autorizado2. Debes llegar a esta página desde www.riojatech.com.');
         window.location.href = 'https://www.example.com';  // Redirigir a una página de error o al inicio
       }
     }
