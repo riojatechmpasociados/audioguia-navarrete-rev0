@@ -31,19 +31,23 @@
     }
   </style>
   <script>
-    // Función para verificar el parámetro 'ref' en la URL
+    // Función para verificar el parámetro 'ref' y el 'referer'
     function checkReferer() {
       // Obtener el valor del parámetro 'ref' en la URL
       var urlParams = new URLSearchParams(window.location.search);
       var ref = urlParams.get('ref'); // Obtener el valor del parámetro 'ref'
 
-      console.log('ref:', ref);  // Ver el valor del parámetro 'ref' en la consola
+      // Obtener el referer (de dónde vino la solicitud)
+      var referer = document.referrer;
 
-      // Verificar si el parámetro 'ref' es igual a 'riojatech'
-      if (ref === 'riojatech') {
+      console.log('ref:', ref);  // Ver el valor del parámetro 'ref' en la consola
+      console.log('Referer:', referer);  // Ver el valor del referer
+
+      // Verificar que el parámetro 'ref' sea 'riojatech' y que el referer contenga 'riojatech.com'
+      if (ref === 'riojatech' && referer && referer.indexOf('riojatech.com') !== -1) {
         console.log('Acceso permitido desde www.riojatech.com');
       } else {
-        alert('Acceso no autorizado4. Debes llegar a esta página desde www.riojatech.com.');
+        alert('Acceso no autorizado5. Debes llegar a esta página desde www.riojatech.com.');
         window.location.href = 'https://www.example.com';  // Redirigir a una página de error o al inicio
       }
     }
