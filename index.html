@@ -30,19 +30,20 @@
       text-decoration: underline;
     }
   </style>
+  <meta name="referrer" content="no-referrer-when-downgrade"> <!-- Añadir política de referer -->
   <script>
     // Función para verificar si el referer es de www.riojatech.com
     function checkReferer() {
       var referer = document.referrer;
 
-      console.log('Referer:', referer);  // Esto ayudará a ver el valor real del referer en la consola
+      console.log('Referer:', referer);  // Ver el referer en la consola
 
-      // Verificar si el referer contiene "riojatech.com" (sin importar el protocolo o el resto de la URL)
+      // Verificar si el referer contiene "riojatech.com"
       if (referer && referer.indexOf('riojatech.com') !== -1) {
         console.log('Acceso permitido desde www.riojatech.com');
       } else {
-        alert('Acceso no autorizado2. Debes llegar a esta página desde www.riojatech.com.');
-        window.location.href = 'https://www.example.com';  // Redirigir a una página de error o al inicio
+        alert('Acceso no autorizado3. Debes llegar a esta página desde www.riojatech.com.');
+        window.location.href = 'https://www.example.com';  // Redirigir a otra página
       }
     }
 
