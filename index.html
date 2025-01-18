@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audioguía del Museo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .logo {
+      width: 150px;
+      height: auto;
+    }
+    .parada {
+      margin: 30px 0;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+    }
+    .footer a {
+      margin: 0 10px;
+      color: #007bff;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script>
+    // Función para verificar si el referer es de Stripe
+    function checkReferer() {
+      var referer = document.referrer;
+
+      // Verificar si el referer comienza con https://checkout.stripe.com
+      if (referer && referer.startsWith('https://google.com')) {
+        // Si el referer es válido, permitir que se cargue la página
+        console.log('Acceso permitido desde Stripe');
+      } else {
+        // Si no proviene de Stripe, redirigir a la página de error o a otra URL
+        alert('Acceso no autorizado. Debes llegar a esta página desde Stripe.');
+        window.location.href = 'https://www.example.com';  // Redirigir a una página de error o al inicio
+      }
+    }
+
+    // Llamar a la función cuando la página cargue
+    window.onload = checkReferer;
+  </script>
+</head>
+<body>
+
+  <!-- Navbar con logo -->
+  <nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <img src="logo.png" alt="Logo" class="logo">
+      <h1 class="ms-4">Audioguía del Museo</h1>
+    </div>
+  </nav>
+
+  <!-- Títulos secundarios con paradas -->
+  <div class="container">
+    <div class="parada">
+      <h2>Parada 1: Entrada al museo</h2>
+      <img src="parada1.jpg" class="img-fluid" alt="Parada 1">
+      <audio controls>
+        <source src="audio1.mp3" type="audio/mp3">
+        Tu navegador no soporta la etiqueta de audio.
+      </audio>
+    </div>
+
+    <div class="parada">
+      <h2>Parada 2: Sala de arte moderno</h2>
+      <img src="parada2.jpg" class="img-fluid" alt="Parada 2">
+      <audio controls>
+        <source src="audio2.mp3" type="audio/mp3">
+        Tu navegador no soporta la etiqueta de audio.
+      </audio>
+    </div>
+ qq
+    <!-- Agregar más paradas según sea necesario -->
+
+    <!-- Para la parada 10 -->
+    <div class="parada">
+      <h2>Parada 10: Salida del museo</h2>
+      <img src="parada10.jpg" class="img-fluid" alt="Parada 10">
+      <audio controls>
+        <source src="audio10.mp3" type="audio/mp3">
+        Tu navegador no soporta la etiqueta de audio.
+      </audio>
+    </div>
+  </div>
+
+  <!-- Footer con enlaces -->
+  <footer class="footer">
+    <a href="#">Contacto</a>
+    <a href="#">Incidencias</a>
+    <a href="#">Privacidad</a>
+    <a href="#">Aviso legal</a>
+    <a href="#">Cookies</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
